@@ -39,11 +39,12 @@ class PhoneNumberCast implements CastsAttributes
      */
     public function get($model, string $key, $value, array $attributes)
     {
-        $parameters = array_unique([$this->countries, $key.'_country']);
+        $parameters = $this->countries;
+        $parameters[] = $key.'_country';
 
         $countries = array_map(function($item) use ($attributes) {
             return $attributes[$item] ?? $item;
-        }, $parameters);
+        }, array_unique($parameters));
 
         return PhoneNumber::make($value, $this->parseCountries($countries));
     }

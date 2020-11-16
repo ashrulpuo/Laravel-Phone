@@ -369,7 +369,7 @@ class PhoneNumber implements Castable, Jsonable, JsonSerializable, Serializable
      */
     public static function castUsing(array $arguments)
     {
-        return new PhoneNumberCast(...$arguments);
+        return new PhoneNumberCast($arguments);
     }
 
     /**
