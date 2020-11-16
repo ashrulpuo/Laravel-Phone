@@ -1,6 +1,6 @@
 <?php
 
-namespace Propaganistas\LaravelPhone\Models;
+namespace Propaganistas\LaravelPhone\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Propaganistas\LaravelPhone\PhoneNumber;
@@ -10,17 +10,21 @@ class PhoneNumberCast implements CastsAttributes
 {
     use ParsesCountries;
 
-    /** @var array */
+    /**
+     * The provided phone country.
+     *
+     * @var array
+     */
     protected $countries = [];
 
     /**
-     * @param string|array $country
+     * PhoneNumberCast constructor.
+     *
+     * @param $country
      */
     public function __construct($country)
     {
-        $this->countries = is_array($country)
-            ? $country
-            : func_get_args();
+        $this->countries = is_array($country) ? $country : func_get_args();
     }
 
     /**
@@ -31,11 +35,17 @@ class PhoneNumberCast implements CastsAttributes
      * @param mixed $value
      * @param array $attributes
      *
-     * @return Propaganistas\LaravelPhone\PhoneNumber
+     * @return \Propaganistas\LaravelPhone\PhoneNumber
      */
     public function get($model, string $key, $value, array $attributes)
     {
-        return PhoneNumber::make($value, $this->resolvePhoneCountry($attributes));
+        $parameters = array_unique([$this->countries, $key.'_country']);
+
+        $countries = array_map(function($item) use ($attributes) {
+            return $attributes[$item] ?? $item;
+        }, $parameters);
+
+        return PhoneNumber::make($value, $this->parseCountries($countries));
     }
 
     /**
@@ -46,27 +56,14 @@ class PhoneNumberCast implements CastsAttributes
      * @param mixed $value
      * @param array $attributes
      *
-     * @return array
+     * @return string
      */
     public function set($model, string $key, $value, array $attributes)
     {
-        return $value instanceof PhoneNumber
-            ? $value->getRawNumber()
-            : $value;
-    }
-
-    protected function resolvePhoneCountry($attributes)
-    {
-        $parsedCountries = $this->parseCountries($this->countries);
-
-        $countryColumns = array_diff($this->countries, $parsedCountries);
-
-        foreach ($countryColumns as $countryColumn) {
-            if ($country = ($attributes[$countryColumn] ?? null)) {
-                $parsedCountries[] = $country;
-            }
+        if ($value instanceof PhoneNumber) {
+            return $value->getRawNumber();
         }
 
-        return $parsedCountries;
+        return (string) $value;
     }
 }

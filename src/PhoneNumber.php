@@ -17,7 +17,7 @@ use libphonenumber\PhoneNumberUtil;
 use Propaganistas\LaravelPhone\Exceptions\NumberFormatException;
 use Propaganistas\LaravelPhone\Exceptions\CountryCodeException;
 use Propaganistas\LaravelPhone\Exceptions\NumberParseException;
-use Propaganistas\LaravelPhone\Models\PhoneNumberCast;
+use Propaganistas\LaravelPhone\Casts\PhoneNumberCast;
 use Propaganistas\LaravelPhone\Traits\ParsesCountries;
 use Propaganistas\LaravelPhone\Traits\ParsesFormats;
 use Propaganistas\LaravelPhone\Traits\ParsesTypes;
@@ -369,7 +369,7 @@ class PhoneNumber implements Castable, Jsonable, JsonSerializable, Serializable
      */
     public static function castUsing(array $arguments)
     {
-        return new PhoneNumberCast($arguments);
+        return new PhoneNumberCast(...$arguments);
     }
 
     /**

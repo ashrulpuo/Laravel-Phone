@@ -3,7 +3,7 @@
 namespace Propaganistas\LaravelPhone\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Propaganistas\LaravelPhone\Models\PhoneNumberCast;
+use Propaganistas\LaravelPhone\Casts\PhoneNumberCast;
 
 class User extends Model
 {

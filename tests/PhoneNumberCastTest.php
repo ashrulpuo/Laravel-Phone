@@ -3,7 +3,7 @@
 namespace Propaganistas\LaravelPhone\Tests;
 
 use Illuminate\Database\Schema\Blueprint;
-use Propaganistas\LaravelPhone\Models\PhoneNumberCast;
+use Propaganistas\LaravelPhone\Casts\PhoneNumberCast;
 use Propaganistas\LaravelPhone\PhoneNumber;
 use Propaganistas\LaravelPhone\Tests\Models\User;
 
